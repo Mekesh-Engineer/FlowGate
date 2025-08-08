@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FlowGate | Smart AI-IoT Access & Crowd Control</title>
+    <meta name="description"
+        content="FlowGate is an intelligent AI-IoT powered gateway system for seamless crowd flow management, digital payments, and automated access control in public spaces." />
+    <meta name="author" content="https://github.com/Mekesh-Engineer" />
+    <meta name="theme-color" content="#FF6B41" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="48x48"
+        href="https://img.icons8.com/?size=100&id=DW1KA1w2bcoT&format=png&color=000000" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/Frontend/Style/main.css" />
+
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind CSS via CDN -->
+    <script>
+        /** @type {import('tailwindcss').Config} */
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: {
+                            DEFAULT: "var(--bg-base)",
+                            surface: "var(--bg-surface)",
+                            overlay: "var(--form-overlay-bg)",
+                            white: "#ffffffff",
+                        },
+                        text: {
+                            primary: "var(--text-primary)",
+                            muted: "var(--text-muted)",
+                        },
+                        input: {
+                            bg: "var(--input-bg)",
+                            color: "var(--input-color)",
+                            placeholder: "var(--input-placeholder)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent-main)",
+                            alt: "var(--accent-alt)",
+                        },
+                        status: {
+                            success: "var(--success)",
+                            danger: "var(--danger)",
+                        },
+                        border: {
+                            light: "var(--border-light)",
+                        },
+                        shadow: {
+                            soft: "var(--shadow-soft)",
+                            glow: "var(--glow-effect)",
+                        },
+                    },
+                    backgroundImage: {
+                        "bright-squares":
+                            "url('https://www.transparenttextures.com/patterns/cubes.png')",
+                    },
+                    fontFamily: {
+                        primary: ["Rajdhani", "sans-serif"],
+                        secondary: ["Poppins", "sans-serif"],
+                    },
+                    fontSize: {
+                        "heading-lg": "2.5rem",
+                        subheading: "1.5rem",
+                        body: "1rem",
+                        label: "0.875rem",
+                        button: "1rem",
+                    },
+                    fontWeight: {
+                        "heading-lg": "800",
+                        subheading: "600",
+                        body: "400",
+                        label: "500",
+                        button: "700",
+                    },
+                    boxShadow: {
+                        soft: "var(--shadow-soft)",
+                        glow: "0 0 8px 2px var(--glow-effect)",
+                    },
+                    textShadow: {
+                        DEFAULT: "var(--text-shadow)",
+                    },
+                    transitionTimingFunction: {
+                        "ease-custom": "cubic-bezier(0.4, 0, 0.2, 1)",
+                    },
+                    transitionDuration: {
+                        400: "400ms",
+                        600: "600ms",
+                    },
+                },
+            },
+            variants: {
+                extend: {
+                    backgroundColor: ["active", "group-hover"],
+                    textColor: ["active", "group-hover"],
+                    boxShadow: ["hover", "focus-visible"],
+                },
+            },
+            plugins: [],
+        };
+
+    </script>
+</head>
+
+<body class="bg-background bg-bright-squares bg-repeat text-text-primary">
+
+    <!-- FlowGate Loading Overlay -->
+    <div id="loading-screen" role="alert" aria-busy="true" aria-label="Loading FlowGate interface" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center 
+        px-6 py-12 sm:py-20 space-y-12 
+        bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat
+        bg-gradient-to-b from-white via-[#fceeee] to-white
+        dark:bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')]
+        dark:from-[#1a1a1a] dark:via-[#000000] dark:to-[#1a1a1a]
+        bg-blend-overlay backdrop-blur-xl text-text-primary font-[Rajdhani]">
+
+        <!-- Step 1: Wave Loader -->
+        <div id="spinner-stage" class="flex flex-col items-center justify-center space-y-10">
+            <!-- Robot Icon -->
+            <i
+                class="bi bi-robot text-8xl sm:text-9xl text-[var(--accent-main)] animate-floatBot drop-shadow-[0_0_14px_var(--glow-effect)]"></i>
+
+            <!-- Loader -->
+            <span class="loader scale-200"></span>
+
+            <!-- Boot Text -->
+            <p id="boot-text" class="mt-20 text-xl sm:text-xl font-mono text-[var(--text-muted)] tracking-wide"></p>
+        </div>
+
+        <!-- Step 2: Greeting -->
+        <div id="greeting-stage" class="hidden flex-col items-center justify-center space-y-8 animate-fade-in">
+            <i
+                class="bi bi-shield-lock-fill text-9xl sm:text-[10rem] text-[var(--accent-main)] drop-shadow-[0_0_14px_var(--glow-effect)]"></i>
+            <h1 class="text-4xl sm:text-5xl font-bold text-[var(--text-primary)] drop-shadow-[var(--text-shadow)]">
+                Welcome to <span class="text-[var(--accent-main)]">FlowGate</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-[var(--text-muted)] font-mono">Your smart gateway is ready</p>
+        </div>
+    </div>
+
+
+
+
+    <!-- HEADER for FlowGate Smart Gateway -->
+    <header class="fixed top-0 left-0 right-0 z-30 px-8 py-5 shadow backdrop-blur-sm  bg-[var(--bg-surface)]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-5">
+                <h1 class="text-2xl font-bold text-[var(--accent-main)] flex items-center gap-2 font-outfit">
+                    <i class="bi bi-robot text-2xl"></i>
+                    FlowGate: <span
+                        class="hidden md:inline text-black dark:text-white font-semibold drop-shadow-sm dark:drop-shadow-md transition-colors duration-300">
+                        Smart Gateway
+                    </span>
+
+                </h1>
+            </div>
+
+            <!-- Navigation Actions -->
+            <nav class="flex items-center gap-6">
+
+                <!-- Search Bar (inside header flex box) -->
+                <div class="hidden md:flex items-center">
+                    <form onsubmit="triggerSearch(); return false;" class="flex items-center rounded-full border border-[var(--border-light)] 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-sm 
+               focus-within:border-[var(--accent-main)] transition-all duration-300 px-4 py-2">
+
+                        <!-- Input -->
+                        <input type="text" id="searchInput" name="topic" placeholder="Search..."
+                            class="flex-1 bg-transparent text-[var(--text-primary)] font-medium 
+                    placeholder-[var(--text-muted)] focus:outline-none focus:ring-0 px-2 text-sm md:text-base w-32 md:w-48" />
+
+                        <!-- Button -->
+                        <button type="submit" class="flex items-center gap-2 justify-center rounded-full 
+                     bg-gradient-to-br from-[var(--accent-main)] to-black 
+                     text-white font-medium tracking-wide px-4 py-1.5 h-[36px] 
+                     shadow-md hover:scale-105 hover:shadow-lg 
+                     transition-all duration-300">
+                            <i class="bi bi-search"></i>
+                            <span class="hidden sm:inline">Search</span>
+                        </button>
+                    </form>
+                </div>
+
+
+
+                <!-- Alerts Wrapper -->
+                <div class="relative inline-block group">
+                    <!-- Alerts Button -->
+                    <button id="notificationsBtn" aria-label="Alerts" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+               hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+               transition-all duration-300">
+                        <i class="bi bi-bell-fill"></i>
+                        <span>Alerts</span>
+                        <span id="notificationsBadge"
+                            class="ml-1 bg-red-500 text-white text-xs rounded-full px-1 hidden">0</span>
+                    </button>
+
+                    <!-- Alerts Panel -->
+                    <div id="notificationsPanel" class="absolute right-0 top-full mt-2 z-50 w-80 max-h-96 overflow-y-auto 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl shadow-lg 
+               p-4 hidden transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold">Alerts</h4>
+                            <button onclick="toggleNotifications()"
+                                class="text-gray-500 hover:text-red-500 text-lg font-bold">&times;</button>
+                        </div>
+                        <ul id="notificationsList" class="space-y-2">
+                            <li class="text-sm text-[var(--text-muted)] italic">No alerts at the moment.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <button aria-label="Settings" onclick="openSettingsPage()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+           bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+           hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+           transition-all duration-300">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Settings</span>
+                </button>
+
+                <!-- Calendar -->
+                <div class="relative">
+                    <button aria-label="Calendar" onclick="toggleCalendarDropdown()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+               hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+               transition-all duration-300">
+                        <i class="bi bi-calendar-event-fill"></i>
+                        <span>Calendar</span>
+                    </button>
+
+                    <!-- Calendar Dropdown -->
+                    <div id="calendarDropdown" class="absolute right-0 mt-2 z-40 bg-[var(--bg-surface)] 
+               text-[var(--text-primary)] rounded-xl shadow-lg p-4 w-80 hidden">
+                        <div class="text-right mb-2">
+                            <button onclick="closeCalendarDropdown()"
+                                class="text-gray-500 hover:text-red-500 text-lg font-bold">&times;</button>
+                        </div>
+                        <div id="calendarClock" class="text-center text-3xl font-semibold mb-4"></div>
+                        <div class="text-center">
+                            <div class="text-lg font-medium mb-2" id="calendarHeader"></div>
+                            <div id="calendarGrid" class="grid grid-cols-7 gap-2 text-sm"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+           bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+           hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+           transition-all duration-300" aria-label="Toggle Theme">
+                    <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+                    <span class="hidden md:inline">Theme</span>
+                </button>
+
+
+            </nav>
+        </div>
+    </header>
+
+    <!--Side NAVBAR-->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 z-10 sidebar-collapsed backdrop-blur-sm bg-[var(--bg-base)] text-[var(--text-primary)] dark:bg-[var(--bg-base)] dark:text-[var(--text-primary)] pt-20 transition-all overflow-y-auto scrollbar-thin scrollbar-thumb-[var(--accent-main)]">
+
+        <!-- Sidebar Toggle Section -->
+        <div class="px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-white/10">
+            <button id="toggleBtn"
+                class="sidebar-link relative w-full flex items-center justify-start gap-4 px-3 py-2 transition text-[var(--text-primary)] hover:text-[var(--accent-main)] dark:text-[var(--text-primary)] dark:hover:text-[var(--accent-main)]"
+                aria-label="Toggle Sidebar">
+                <i id="toggleIcon" class="bi bi-chevron-double-left text-xl text-current"></i>
+                <span class="sidebar-label">Collapse</span>
+                <span class="nav-tooltip">Collapse Sidebar</span>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="mt-6 px-4 flex-1 text-base font-medium" role="navigation" aria-label="Sidebar Navigation">
+            <ul class="space-y-1">
+                <!-- Home Navigation -->
+                <li class="mt-4 text-xs uppercase tracking-wide sidebar-label pl-2 border-l-2"
+                    style="border-color: var(--accent-main); color: var(--text-muted);">
+                    Home Navigation
+                </li>
+
+                <!-- Navigation Links -->
+                <li>
+                    <a href="home.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-house-door text-xl"></i>
+                        <span class="sidebar-label ">Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="aboutus.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-info-circle text-xl"></i>
+                        <span class="sidebar-label">About Us</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/blog.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-journal-text text-xl"></i>
+                        <span class="sidebar-label">Blog</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/contact.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-envelope-fill text-xl"></i>
+                        <span class="sidebar-label">Contact Us</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div id="sidebarFooter"
+            class="mt-auto px-5 py-5 border-t border-gray-200 dark:border-white/10 flex flex-col gap-3 text-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="https://api.dicebear.com/6.x/initials/svg?seed=GX" alt="Avatar"
+                        class="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-600" />
+                    <div class="sidebar-label">
+                        <div class="font-semibold text-[var(--text-primary)]" id="usernameDisplay">Mekesh</div>
+                        <div class="text-xs text-[var(--text-muted)]" id="userRoleDisplay">Role: Administrator</div>
+                    </div>
+                </div>
+                <button title="Logout" aria-label="Logout"
+                    class="text-[var(--danger)] hover:text-red-600 transition-colors">
+                    <i class="bi bi-box-arrow-left text-lg"></i>
+                </button>
+            </div>
+            <div class="text-[0.7rem] text-[var(--text-muted)] mt-1 flex items-center gap-1">
+                <i class="bi bi-info-circle-fill"></i>
+                v1.0.0 | FlowGate Smart Gateway
+            </div>
+        </div>
+    </aside>
+    <main id="mainContent" class=" p-6 transition-all duration-500">
+
+    </main>
+
+    <footer class="relative bg-gradient-to-br from-black to-neutral-900 text-white overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20">
+            <div
+                class="absolute top-20 left-10 w-32 h-32 bg-[var(--accent-main)]/40 rounded-full filter blur-3xl animate-float1">
+            </div>
+            <div
+                class="absolute top-40 right-20 w-40 h-40 bg-purple-500/40 rounded-full filter blur-3xl animate-float2">
+            </div>
+            <div
+                class="absolute bottom-10 left-1/2 w-48 h-48 bg-cyan-500/40 rounded-full filter blur-3xl animate-float3">
+            </div>
+        </div>
+
+        <!-- Main footer content -->
+        <div class="relative max-w-7xl mx-auto px-6 py-16 sm:py-20 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12">
+
+                <!-- Logo / Brand -->
+                <div class="group">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-r from-[var(--accent-main)] to-black rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition duration-500">
+                            <i class="bi bi-robot text-xl text-white"></i>
+                        </div>
+                        <h2
+                            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-main)] to-white">
+                            FlowGate
+                        </h2>
+                    </div>
+                    <p class="text-[var(--text-muted)] mb-6">
+                        AI-IoT powered smart access and crowd control for a sustainable, connected future.
+                    </p>
+
+                    <!-- Social links -->
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-twitter text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-linkedin text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-github text-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="home.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-house-door me-2"></i>Home</a></li>
+                        <li><a href="aboutus.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-info-circle me-2"></i>About Us</a></li>
+                        <li><a href="blog.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-journal-text me-2"></i>Blog</a></li>
+                        <li><a href="contact.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-envelope me-2"></i>Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact info -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Get in Touch</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div
+                                class="w-8 h-8 bg-[var(--accent-main)]/20 rounded-full flex items-center justify-center animate-pulse">
+                                <i class="bi bi-envelope text-[var(--accent-main)]"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-[var(--text-muted)]">Email</p>
+                                <a href="mailto:info@flowgate.com"
+                                    class="text-white hover:text-[var(--accent-main)] transition">info@flowgate.com</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="w-8 h-8 bg-[var(--accent-main)]/20 rounded-full flex items-center justify-center animate-pulse"
+                                style="animation-delay: 0.2s">
+                                <i class="bi bi-telephone text-[var(--accent-main)]"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-[var(--text-muted)]">Phone</p>
+                                <a href="tel:+919876543210"
+                                    class="text-white hover:text-[var(--accent-main)] transition">+91 98765 43210</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Stay Updated</h3>
+                    <p class="text-[var(--text-muted)] mb-4">Subscribe for FlowGate updates, releases & insights.</p>
+                    <form class="mt-4">
+                        <div class="relative">
+                            <input type="email" placeholder="Your email"
+                                class="w-full bg-neutral-800 border border-neutral-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--accent-main)] text-white placeholder-gray-500">
+                            <button type="submit"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[var(--accent-main)] hover:bg-black text-white rounded-lg px-4 py-2 transition">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="mt-16 pt-8 border-t border-neutral-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-[var(--text-muted)] text-sm mb-4 md:mb-0">
+                    &copy; <span id="year" class="text-[var(--accent-main)]"></span> FlowGate. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Terms of Service</a>
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Cookies</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating orb -->
+        <div
+            class="orb absolute w-64 h-64 rounded-full bg-gradient-to-r from-[var(--accent-main)]/10 to-purple-500/10 filter blur-3xl pointer-events-none">
+        </div>
+    </footer>
+
+    <!-- AOS Script -->
+    <script src=" https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+
+    <!-- SwiperJS (carousel) CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="/Frontend/Js/main.js" defer></script>
+</body>
+
+</html>

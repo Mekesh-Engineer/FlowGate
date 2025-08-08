@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FlowGate | Smart AI-IoT Access & Crowd Control</title>
+    <meta name="description"
+        content="FlowGate is an intelligent AI-IoT powered gateway system for seamless crowd flow management, digital payments, and automated access control in public spaces." />
+    <meta name="author" content="https://github.com/Mekesh-Engineer" />
+    <meta name="theme-color" content="#FF6B41" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="48x48"
+        href="https://img.icons8.com/?size=100&id=DW1KA1w2bcoT&format=png&color=000000" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/Frontend/Style/main.css" />
+
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind CSS via CDN -->
+    <script>
+        /** @type {import('tailwindcss').Config} */
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: {
+                            DEFAULT: "var(--bg-base)",
+                            surface: "var(--bg-surface)",
+                            overlay: "var(--form-overlay-bg)",
+                            white: "#ffffffff",
+                        },
+                        text: {
+                            primary: "var(--text-primary)",
+                            muted: "var(--text-muted)",
+                        },
+                        input: {
+                            bg: "var(--input-bg)",
+                            color: "var(--input-color)",
+                            placeholder: "var(--input-placeholder)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent-main)",
+                            alt: "var(--accent-alt)",
+                        },
+                        status: {
+                            success: "var(--success)",
+                            danger: "var(--danger)",
+                        },
+                        border: {
+                            light: "var(--border-light)",
+                        },
+                        shadow: {
+                            soft: "var(--shadow-soft)",
+                            glow: "var(--glow-effect)",
+                        },
+                    },
+                    backgroundImage: {
+                        "bright-squares":
+                            "url('https://www.transparenttextures.com/patterns/cubes.png')",
+                    },
+                    fontFamily: {
+                        primary: ["Rajdhani", "sans-serif"],
+                        secondary: ["Poppins", "sans-serif"],
+                    },
+                    fontSize: {
+                        "heading-lg": "2.5rem",
+                        subheading: "1.5rem",
+                        body: "1rem",
+                        label: "0.875rem",
+                        button: "1rem",
+                    },
+                    fontWeight: {
+                        "heading-lg": "800",
+                        subheading: "600",
+                        body: "400",
+                        label: "500",
+                        button: "700",
+                    },
+                    boxShadow: {
+                        soft: "var(--shadow-soft)",
+                        glow: "0 0 8px 2px var(--glow-effect)",
+                    },
+                    textShadow: {
+                        DEFAULT: "var(--text-shadow)",
+                    },
+                    transitionTimingFunction: {
+                        "ease-custom": "cubic-bezier(0.4, 0, 0.2, 1)",
+                    },
+                    transitionDuration: {
+                        400: "400ms",
+                        600: "600ms",
+                    },
+                },
+            },
+            variants: {
+                extend: {
+                    backgroundColor: ["active", "group-hover"],
+                    textColor: ["active", "group-hover"],
+                    boxShadow: ["hover", "focus-visible"],
+                },
+            },
+            plugins: [],
+        };
+
+    </script>
+</head>
+
+<body class="bg-background bg-bright-squares bg-repeat text-text-primary">
+
+    <!-- FlowGate Loading Overlay -->
+    <div id="loading-screen" role="alert" aria-busy="true" aria-label="Loading FlowGate interface" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center 
+        px-6 py-12 sm:py-20 space-y-12 
+        bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat
+        bg-gradient-to-b from-white via-[#fceeee] to-white
+        dark:bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')]
+        dark:from-[#1a1a1a] dark:via-[#000000] dark:to-[#1a1a1a]
+        bg-blend-overlay backdrop-blur-xl text-text-primary font-[Rajdhani]">
+
+        <!-- Step 1: Wave Loader -->
+        <div id="spinner-stage" class="flex flex-col items-center justify-center space-y-10">
+            <!-- Robot Icon -->
+            <i
+                class="bi bi-robot text-8xl sm:text-9xl text-[var(--accent-main)] animate-floatBot drop-shadow-[0_0_14px_var(--glow-effect)]"></i>
+
+            <!-- Loader -->
+            <span class="loader scale-200"></span>
+
+            <!-- Boot Text -->
+            <p id="boot-text" class="mt-20 text-xl sm:text-xl font-mono text-[var(--text-muted)] tracking-wide"></p>
+        </div>
+
+        <!-- Step 2: Greeting -->
+        <div id="greeting-stage" class="hidden flex-col items-center justify-center space-y-8 animate-fade-in">
+            <i
+                class="bi bi-shield-lock-fill text-9xl sm:text-[10rem] text-[var(--accent-main)] drop-shadow-[0_0_14px_var(--glow-effect)]"></i>
+            <h1 class="text-4xl sm:text-5xl font-bold text-[var(--text-primary)] drop-shadow-[var(--text-shadow)]">
+                Welcome to <span class="text-[var(--accent-main)]">FlowGate</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-[var(--text-muted)] font-mono">Your smart gateway is ready</p>
+        </div>
+    </div>
+
+
+
+
+    <!-- HEADER for FlowGate Smart Gateway -->
+    <header class="fixed top-0 left-0 right-0 z-30 px-8 py-5 shadow backdrop-blur-sm  bg-[var(--bg-surface)]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-5">
+                <h1 class="text-2xl font-bold text-[var(--accent-main)] flex items-center gap-2 font-outfit">
+                    <i class="bi bi-robot text-2xl"></i>
+                    FlowGate: <span
+                        class="hidden md:inline text-black dark:text-white font-semibold drop-shadow-sm dark:drop-shadow-md transition-colors duration-300">
+                        Smart Gateway
+                    </span>
+
+                </h1>
+            </div>
+
+            <!-- Navigation Actions -->
+            <nav class="flex items-center gap-6">
+
+                <!-- Search Bar (inside header flex box) -->
+                <div class="hidden md:flex items-center">
+                    <form onsubmit="triggerSearch(); return false;" class="flex items-center rounded-full border border-[var(--border-light)] 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-sm 
+               focus-within:border-[var(--accent-main)] transition-all duration-300 px-4 py-2">
+
+                        <!-- Input -->
+                        <input type="text" id="searchInput" name="topic" placeholder="Search..."
+                            class="flex-1 bg-transparent text-[var(--text-primary)] font-medium 
+                    placeholder-[var(--text-muted)] focus:outline-none focus:ring-0 px-2 text-sm md:text-base w-32 md:w-48" />
+
+                        <!-- Button -->
+                        <button type="submit" class="flex items-center gap-2 justify-center rounded-full 
+                     bg-gradient-to-br from-[var(--accent-main)] to-black 
+                     text-white font-medium tracking-wide px-4 py-1.5 h-[36px] 
+                     shadow-md hover:scale-105 hover:shadow-lg 
+                     transition-all duration-300">
+                            <i class="bi bi-search"></i>
+                            <span class="hidden sm:inline">Search</span>
+                        </button>
+                    </form>
+                </div>
+
+
+
+                <!-- Alerts Wrapper -->
+                <div class="relative inline-block group">
+                    <!-- Alerts Button -->
+                    <button id="notificationsBtn" aria-label="Alerts" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+               hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+               transition-all duration-300">
+                        <i class="bi bi-bell-fill"></i>
+                        <span>Alerts</span>
+                        <span id="notificationsBadge"
+                            class="ml-1 bg-red-500 text-white text-xs rounded-full px-1 hidden">0</span>
+                    </button>
+
+                    <!-- Alerts Panel -->
+                    <div id="notificationsPanel" class="absolute right-0 top-full mt-2 z-50 w-80 max-h-96 overflow-y-auto 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl shadow-lg 
+               p-4 hidden transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold">Alerts</h4>
+                            <button onclick="toggleNotifications()"
+                                class="text-gray-500 hover:text-red-500 text-lg font-bold">&times;</button>
+                        </div>
+                        <ul id="notificationsList" class="space-y-2">
+                            <li class="text-sm text-[var(--text-muted)] italic">No alerts at the moment.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <button aria-label="Settings" onclick="openSettingsPage()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+           bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+           hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+           transition-all duration-300">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Settings</span>
+                </button>
+
+                <!-- Calendar -->
+                <div class="relative">
+                    <button aria-label="Calendar" onclick="toggleCalendarDropdown()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+               bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+               hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+               transition-all duration-300">
+                        <i class="bi bi-calendar-event-fill"></i>
+                        <span>Calendar</span>
+                    </button>
+
+                    <!-- Calendar Dropdown -->
+                    <div id="calendarDropdown" class="absolute right-0 mt-2 z-40 bg-[var(--bg-surface)] 
+               text-[var(--text-primary)] rounded-xl shadow-lg p-4 w-80 hidden">
+                        <div class="text-right mb-2">
+                            <button onclick="closeCalendarDropdown()"
+                                class="text-gray-500 hover:text-red-500 text-lg font-bold">&times;</button>
+                        </div>
+                        <div id="calendarClock" class="text-center text-3xl font-semibold mb-4"></div>
+                        <div class="text-center">
+                            <div class="text-lg font-medium mb-2" id="calendarHeader"></div>
+                            <div id="calendarGrid" class="grid grid-cols-7 gap-2 text-sm"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="flex gap-2 items-center font-medium text-base px-4 py-2 rounded-lg 
+           bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-md 
+           hover:shadow-lg hover:bg-[var(--accent-main)] hover:text-white 
+           transition-all duration-300" aria-label="Toggle Theme">
+                    <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+                    <span class="hidden md:inline">Theme</span>
+                </button>
+
+
+            </nav>
+        </div>
+    </header>
+
+    <!--Side NAVBAR-->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 z-10 sidebar-collapsed backdrop-blur-sm bg-[var(--bg-base)] text-[var(--text-primary)] dark:bg-[var(--bg-base)] dark:text-[var(--text-primary)] pt-20 transition-all overflow-y-auto scrollbar-thin scrollbar-thumb-[var(--accent-main)]">
+
+        <!-- Sidebar Toggle Section -->
+        <div class="px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-white/10">
+            <button id="toggleBtn"
+                class="sidebar-link relative w-full flex items-center justify-start gap-4 px-3 py-2 transition text-[var(--text-primary)] hover:text-[var(--accent-main)] dark:text-[var(--text-primary)] dark:hover:text-[var(--accent-main)]"
+                aria-label="Toggle Sidebar">
+                <i id="toggleIcon" class="bi bi-chevron-double-left text-xl text-current"></i>
+                <span class="sidebar-label">Collapse</span>
+                <span class="nav-tooltip">Collapse Sidebar</span>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="mt-6 px-4 flex-1 text-base font-medium" role="navigation" aria-label="Sidebar Navigation">
+            <ul class="space-y-1">
+                <!-- Home Navigation -->
+                <li class="mt-4 text-xs uppercase tracking-wide sidebar-label pl-2 border-l-2"
+                    style="border-color: var(--accent-main); color: var(--text-muted);">
+                    Home Navigation
+                </li>
+
+                <!-- Navigation Links -->
+                <li>
+                    <a href="home.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-house-door text-xl"></i>
+                        <span class="sidebar-label ">Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="aboutus.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-info-circle text-xl"></i>
+                        <span class="sidebar-label">About Us</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/blog.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-journal-text text-xl"></i>
+                        <span class="sidebar-label">Blog</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/contact.html" class="sidebar-link flex items-center gap-2 px-2 py-2 rounded-md transition"
+                        style="color: var(--text-primary);"
+                        onmouseover="this.style.background='var(--bg-surface)'; this.style.color='var(--accent-main)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'">
+                        <i class="bi bi-envelope-fill text-xl"></i>
+                        <span class="sidebar-label">Contact Us</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div id="sidebarFooter"
+            class="mt-auto px-5 py-5 border-t border-gray-200 dark:border-white/10 flex flex-col gap-3 text-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="https://api.dicebear.com/6.x/initials/svg?seed=GX" alt="Avatar"
+                        class="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-600" />
+                    <div class="sidebar-label">
+                        <div class="font-semibold text-[var(--text-primary)]" id="usernameDisplay">Mekesh</div>
+                        <div class="text-xs text-[var(--text-muted)]" id="userRoleDisplay">Role: Administrator</div>
+                    </div>
+                </div>
+                <button title="Logout" aria-label="Logout"
+                    class="text-[var(--danger)] hover:text-red-600 transition-colors">
+                    <i class="bi bi-box-arrow-left text-lg"></i>
+                </button>
+            </div>
+            <div class="text-[0.7rem] text-[var(--text-muted)] mt-1 flex items-center gap-1">
+                <i class="bi bi-info-circle-fill"></i>
+                v1.0.0 | FlowGate Smart Gateway
+            </div>
+        </div>
+    </aside>
+
+    <main id="mainContent" class=" p-6 transition-all duration-500">
+        <section
+            class="relative overflow-hidden font-primary bg-white bg-[url('https://images.unsplash.com/photo-1647867695624-adddd5b43ea2?q=80&w=1239&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-repeat bg-cover bg-center">
+            <div
+                class="container mx-auto lg:px-12 px-5 py-24 md:py-32 relative z-10 lg:h-[100vh] flex items-center justify-center">
+                <div class="flex flex-col md:flex-row items-center justify-between w-full">
+
+                    <!-- Left Text Content -->
+                    <div class="w-full md:w-1/2 mb-12 md:mb-0 relative">
+                        <h1 class="text-4xl md:text-7xl font-bold font-secondary text-white mb-6 leading-tight">
+                            Welcome to Smart Gateway: <br />
+                            <span
+                                class="bg-gradient-to-br from-[var(--accent-main)] to-black inline-block text-transparent bg-clip-text">
+                                Your Seamless Digital Entry
+                            </span>
+                        </h1>
+                        <p class="text-xl mb-5 text-white font-inter max-w-xl">
+                            Experience AI-powered crowd flow, real-time analytics, and effortless digital payments — all
+                            in one unified access system.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <!-- Book Now CTA -->
+                            <button
+                                class="group relative w-full sm:w-auto px-6 py-3 min-w-[180px] rounded-lg overflow-hidden"
+                                aria-label="Book Your Ticket Now" role="button">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-[var(--accent-main)] to-black rounded-lg transition-all duration-500 group-hover:from-black group-hover:to-[var(--accent-main)]">
+                                </div>
+                                <div class="relative flex items-center justify-center gap-2 text-white font-medium">
+                                    <span>Book Your Ticket Now</span>
+                                    <i class="bi bi-arrow-right-circle-fill text-lg"></i>
+                                </div>
+                            </button>
+
+                            <!-- Learn More CTA -->
+                            <button
+                                class="w-full sm:w-auto px-6 py-3 rounded-lg border border-black/20 bg-white/70 backdrop-blur-lg text-black hover:bg-black hover:text-white transition-all min-w-[160px]"
+                                aria-label="Learn More" role="button">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Content Card -->
+                    <div class="w-full md:w-2/5 md:pl-12">
+                        <div
+                            class="bg-white/80 backdrop-blur-lg relative rounded-xl p-8 shadow-2xl border border-black/10">
+                            <h2 class="text-2xl font-semibold mb-6 text-black">Why FlowGate?</h2>
+                            <ul class="space-y-4 text-black">
+                                <li class="flex items-center">
+                                    <i class="bi bi-lightning-charge-fill text-yellow-500 text-xl mr-3"></i>
+                                    <span>Instant Digital Entry with QR Ticketing</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="bi bi-shield-check text-green-500 text-xl mr-3"></i>
+                                    <span>Secure Access Control & Role Management</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="bi bi-cpu-fill text-purple-500 text-xl mr-3"></i>
+                                    <span>AI-Powered Crowd & Energy Insights</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <section id="features" class="container mx-auto px-4 bg-slate-50 dark:bg-[var(--bg-base)] 
+           text-[var(--text-primary)] py-12 md:py-16 lg:py-20">
+            <!-- Section Header -->
+            <div class="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-12">
+                <h2 class="font-bold text-3xl leading-[1.1] sm:text-4xl md:text-6xl">
+                    Content Tailored for
+                    <span class="bg-gradient-to-br from-[var(--accent-main)] to-black bg-clip-text text-transparent">
+                        FlowGate
+                    </span>
+                </h2>
+                <p class="max-w-[85%] leading-normal text-[var(--text-muted)] sm:text-lg sm:leading-7">
+                    Smart, secure, and sustainable — FlowGate empowers seamless ticketing, controlled access, and
+                    real-time analytics powered by AI & IoT.
+                </p>
+            </div>
+
+            <!-- Feature Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+                <!-- Book Ticket -->
+                <div class="category-card bg-gradient-to-br from-[var(--accent-main)] to-black text-white 
+                    rounded-2xl p-8 flex flex-col justify-between shadow-lg hover:shadow-2xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:shadow-glow" onclick="showDetails('Book Ticket')">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 flex items-center">
+                            <i class="bi bi-ticket-perforated-fill text-white me-2"></i> Book Ticket
+                        </h3>
+                        <p class="opacity-90 text-base">Instant booking with secure payment gateways and QR-based entry
+                            validation.</p>
+                    </div>
+                    <div class="text-right mt-4">
+                        <i class="bi bi-arrow-right-circle-fill text-white text-2xl"></i>
+                    </div>
+                </div>
+
+                <!-- Smart Access Control -->
+                <div class="category-card bg-[var(--bg-base)] dark:bg-[var(--bg-surface)] 
+                    text-[var(--text-primary)] rounded-2xl p-8 shadow-md hover:shadow-xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:hover:shadow-glow" onclick="showDetails('Smart Access Control')">
+                    <h3 class="text-2xl font-bold mb-2 flex items-center">
+                        <i class="bi bi-shield-lock-fill text-[var(--accent-main)] me-2"></i> Smart Access
+                    </h3>
+                    <p class="text-[var(--text-muted)] text-base">
+                        Role-based, secure authentication with real-time gate control.
+                    </p>
+                </div>
+
+                <!-- Crowd Analytics -->
+                <div class="category-card bg-[var(--bg-base)] dark:bg-[var(--bg-surface)] 
+                    text-[var(--text-primary)] rounded-2xl p-8 shadow-md hover:shadow-xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:hover:shadow-glow" onclick="showDetails('Crowd Analytics')">
+                    <h3 class="text-2xl font-bold mb-2 flex items-center">
+                        <i class="bi bi-graph-up-arrow text-[var(--accent-main)] me-2"></i> Crowd Analytics
+                    </h3>
+                    <p class="text-[var(--text-muted)] text-base">
+                        Track congestion, flow, and behavior patterns using AI-powered analytics.
+                    </p>
+                </div>
+
+                <!-- About FlowGate -->
+                <div class="category-card bg-[var(--bg-base)] dark:bg-[var(--bg-surface)] 
+                    text-[var(--text-primary)] rounded-2xl p-8 shadow-md hover:shadow-xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:hover:shadow-glow" onclick="window.location.href='/aboutus.html'">
+                    <h3 class="text-2xl font-bold mb-2 flex items-center">
+                        <i class="bi bi-info-circle-fill text-[var(--accent-main)] me-2"></i> About
+                    </h3>
+                    <p class="text-[var(--text-muted)] text-base">
+                        Learn more about FlowGate’s mission, tech stack, and capabilities.
+                    </p>
+                </div>
+
+                <!-- Contact Support -->
+                <div class="category-card bg-[var(--bg-base)] dark:bg-[var(--bg-surface)] 
+                    text-[var(--text-primary)] rounded-2xl p-8 shadow-md hover:shadow-xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:hover:shadow-glow" onclick="window.location.href='/contact.html'">
+                    <h3 class="text-2xl font-bold mb-2 flex items-center">
+                        <i class="bi bi-envelope-fill text-[var(--accent-main)] me-2"></i> Contact
+                    </h3>
+                    <p class="text-[var(--text-muted)] text-base">
+                        Reach out for technical support, integrations, or partnership inquiries.
+                    </p>
+                </div>
+
+                <!-- Subscriptions & Plans -->
+                <div class="category-card bg-[var(--bg-base)] dark:bg-[var(--bg-surface)] 
+                    text-[var(--text-primary)] rounded-2xl p-8 shadow-md hover:shadow-xl 
+                    transition-transform duration-300 cursor-pointer hover:scale-105 
+                    dark:hover:shadow-glow" onclick="showDetails('Subscriptions')">
+                    <h3 class="text-2xl font-bold mb-2 flex items-center">
+                        <i class="bi bi-box-seam text-[var(--accent-main)] me-2"></i> Subscriptions
+                    </h3>
+                    <p class="text-[var(--text-muted)] text-base">
+                        Flexible plans for individuals, organizations, and enterprises.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Why choose Us? -->
+        <section class="container mx-auto px-6 lg:px-12 py-12 md:py-24">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+
+                <!-- Left Side: FlowGate Info -->
+                <div class="w-full md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-bold text-black leading-tight mb-6">
+                        Welcome to
+                        <span
+                            class="bg-gradient-to-br from-[var(--accent-main)] to-black bg-clip-text text-transparent">
+                            FlowGate
+                        </span>
+                    </h1>
+                    <p class="text-xl text-[var(--text-muted)] mb-6">
+                        AI-IoT powered gateway for seamless access, secure payments, and intelligent crowd flow
+                        management — designed for a sustainable future.
+                    </p>
+                    <a href="#features"
+                        class="inline-block bg-gradient-to-br from-[var(--accent-main)] to-black text-white font-semibold px-8 py-4 rounded-lg hover:scale-105 hover:shadow-lg transition duration-300">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Right Side: Why Choose FlowGate -->
+                <div class="w-full md:w-1/2">
+                    <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-black/10">
+                        <h2 class="text-2xl font-semibold text-black mb-8">Why Choose FlowGate?</h2>
+
+                        <!-- Grid of Highlights -->
+                        <div class="grid sm:grid-cols-2 gap-6 mb-8">
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="bg-gradient-to-br from-[var(--accent-main)] to-black p-3 rounded-full text-white">
+                                    <i class="bi bi-lightning-charge-fill text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-black">EarthTech Powered</h3>
+                                    <p class="text-sm text-[var(--text-muted)]">Data-driven IoT solutions built for
+                                        energy efficiency and smart infrastructure.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="bg-gradient-to-br from-[var(--accent-main)] to-black p-3 rounded-full text-white">
+                                    <i class="bi bi-shield-lock-fill text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-black">Secure & Reliable</h3>
+                                    <p class="text-sm text-[var(--text-muted)]">Advanced encryption and role-based
+                                        access for safe, seamless operations.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="bg-gradient-to-br from-[var(--accent-main)] to-black p-3 rounded-full text-white">
+                                    <i class="bi bi-bar-chart-fill text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-black">Real-Time Insights</h3>
+                                    <p class="text-sm text-[var(--text-muted)]">AI-driven analytics to optimize crowd
+                                        flow, detect anomalies, and enhance decision-making.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="bg-gradient-to-br from-[var(--accent-main)] to-black p-3 rounded-full text-white">
+                                    <i class="bi bi-globe2 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-black">Future-Ready</h3>
+                                    <p class="text-sm text-[var(--text-muted)]">Scalable smart gateway built for
+                                        sustainable cities and next-gen mobility.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <a href="#features"
+                                class="block text-center bg-gradient-to-br from-[var(--accent-main)] to-black text-white font-semibold px-6 py-3 rounded-lg hover:scale-105 hover:shadow-md transition duration-300">
+                                Explore Features
+                            </a>
+                            <a href="#contact"
+                                class="block text-center border border-[var(--accent-main)] text-[var(--accent-main)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--accent-main)] hover:text-white transition duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="works" class="relative bg-white dark:bg-[var(--bg-base)] 
+           py-12 sm:py-16 lg:py-24 transition-colors duration-300">
+            <div class="px-6 mx-auto max-w-7xl sm:px-8 lg:px-12">
+                <!-- Heading -->
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-4xl font-extrabold text-black dark:text-white md:text-6xl">
+                        How FlowGate Works
+                    </h2>
+                    <p class="max-w-2xl mx-auto mt-4 text-lg 
+                      text-[var(--text-muted)] md:text-xl">
+                        Seamless, secure, and smart — powered by AI & IoT for effortless access.
+                    </p>
+                </div>
+
+                <!-- Steps Grid -->
+                <div class="relative mt-12 lg:mt-20">
+                    <!-- Decorative Line -->
+                    <div class="absolute inset-x-0 hidden xl:px-44 top-4 md:block md:px-20 lg:px-28">
+                        <img alt="Steps Connection Line" loading="lazy" width="1000" height="500"
+                            class="w-full opacity-60 dark:opacity-80 mix-blend-multiply dark:mix-blend-screen"
+                            src="https://cdn.rareblocks.xyz/collection/celebration/images/steps/2/curved-dotted-line.svg">
+                    </div>
+
+                    <div class="relative grid grid-cols-1 gap-y-12 text-center md:grid-cols-4 gap-x-12">
+
+                        <!-- Step 1 -->
+                        <div>
+                            <div class="flex items-center justify-center w-20 h-20 mx-auto 
+                               bg-gradient-to-br from-[var(--accent-main)] to-black text-white 
+                               rounded-full shadow-lg dark:shadow-glow">
+                                <i class="bi bi-person-plus-fill text-2xl"></i>
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-black dark:text-white 
+                               leading-tight md:mt-8">
+                                Register
+                            </h3>
+                            <p class="mt-4 text-base text-[var(--text-muted)] md:text-lg">
+                                Sign up with your details to create a FlowGate profile in seconds.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div>
+                            <div class="flex items-center justify-center w-20 h-20 mx-auto 
+                               bg-gradient-to-br from-[var(--accent-main)] to-black text-white 
+                               rounded-full shadow-lg dark:shadow-glow">
+                                <i class="bi bi-credit-card-fill text-2xl"></i>
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-black dark:text-white 
+                               leading-tight md:mt-8">
+                                Book & Pay
+                            </h3>
+                            <p class="mt-4 text-base text-[var(--text-muted)] md:text-lg">
+                                Reserve your slot and pay securely through our smart payment gateway.
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div>
+                            <div class="flex items-center justify-center w-20 h-20 mx-auto 
+                               bg-gradient-to-br from-[var(--accent-main)] to-black text-white 
+                               rounded-full shadow-lg dark:shadow-glow">
+                                <i class="bi bi-qr-code-scan text-2xl"></i>
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-black dark:text-white 
+                               leading-tight md:mt-8">
+                                Get QR Code
+                            </h3>
+                            <p class="mt-4 text-base text-[var(--text-muted)] md:text-lg">
+                                Receive an instant digital QR pass for contactless entry.
+                            </p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div>
+                            <div class="flex items-center justify-center w-20 h-20 mx-auto 
+                               bg-gradient-to-br from-[var(--accent-main)] to-black text-white 
+                               rounded-full shadow-lg dark:shadow-glow">
+                                <i class="bi bi-door-open-fill text-2xl"></i>
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-black dark:text-white 
+                               leading-tight md:mt-8">
+                                Easy Entry
+                            </h3>
+                            <p class="mt-4 text-base text-[var(--text-muted)] md:text-lg">
+                                Scan your code at FlowGate and enjoy smooth, secure, and fast access.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gradient Glow Effect -->
+            <div class="absolute inset-0 m-auto max-w-xs h-[357px] blur-[118px] sm:max-w-md md:max-w-lg
+                dark:opacity-50"
+                style="background:radial-gradient(circle, rgba(163,0,0,0.2) 0%, rgba(255,76,76,0.25) 60%, rgba(0,0,0,0.05) 100%)">
+            </div>
+        </section>
+
+        <!-- FlowGate Event Gallery -->
+        <section id="gallery" class="relative py-16 bg-white dark:bg-[var(--bg-base)] transition-colors duration-300">
+
+            <!-- Heading -->
+            <div class="max-w-4xl mx-auto text-center mb-16">
+                <h2 class="text-4xl font-extrabold md:text-6xl split-reveal 
+                   text-[var(--text-primary)] dark:text-[var(--text-primary)]">
+                    FlowGate
+                    <span class="bg-gradient-to-br from-[var(--accent-main)] 
+                         to-[var(--text-primary)] dark:to-white 
+                         bg-clip-text text-transparent">
+                        Gallery
+                    </span>
+                </h2>
+                <p class="max-w-2xl mx-auto mt-4 text-lg text-[var(--text-muted)] md:text-xl text-reveal">
+                    Explore real-world deployments and event highlights powered by FlowGate’s AI-IoT smart access
+                    system.
+                </p>
+            </div>
+
+            <!-- Scrollable Gallery Container -->
+            <div class="scroll-container h-screen overflow-y-auto overflow-x-hidden">
+
+                <!-- Example 1 -->
+                <section class="scroll-section relative min-h-screen md:h-screen flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden group shine-effect">
+                        <img src="https://images.unsplash.com/photo-1626078859283-7e83d7e4137f?q=80&w=1074&auto=format&fit=crop"
+                            alt="Smart Stadium Entry Crowd" loading="lazy"
+                            class="shine-image absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 
+                            dark:from-black/90 dark:to-black/60"></div>
+                    </div>
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-10 
+                        bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)]">
+                        <div class="max-w-lg">
+                            <span class="text-[var(--accent-main)] tracking-wider text-sm font-mono">01 / EVENTS</span>
+                            <h2
+                                class="mt-4 text-5xl md:text-6xl font-bold leading-none split-reveal text-[var(--text-primary)]">
+                                Stadium Gateways
+                            </h2>
+                            <p class="mt-6 text-[var(--text-muted)] text-lg leading-relaxed text-reveal">
+                                FlowGate enables instant ticket scanning and secure entry for large crowds at stadium
+                                events.
+                            </p>
+                            <button class="mt-8 px-6 py-3 bg-gradient-to-br from-[var(--accent-main)] to-black 
+                                   dark:from-black dark:to-[var(--accent-main)] hover:scale-105 rounded-full 
+                                   text-sm font-medium transition-all duration-300 text-white">
+                                Explore More →
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Example 2 -->
+                <section class="scroll-section relative min-h-screen md:h-screen flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-10 
+                        bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] order-2 md:order-1">
+                        <div class="max-w-lg">
+                            <span class="text-[var(--accent-main)] tracking-wider text-sm font-mono">02 /
+                                INSIGHTS</span>
+                            <h2
+                                class="mt-4 text-5xl md:text-6xl font-bold leading-none split-reveal text-[var(--text-primary)]">
+                                Exhibition Halls
+                            </h2>
+                            <p class="mt-6 text-[var(--text-muted)] text-lg leading-relaxed text-reveal">
+                                Manage visitor flows and prevent congestion with AI-powered crowd analytics.
+                            </p>
+                            <button class="mt-8 px-6 py-3 bg-gradient-to-br from-[var(--accent-main)] to-black 
+                                   dark:from-black dark:to-[var(--accent-main)] hover:scale-105 rounded-full 
+                                   text-sm font-medium transition-all duration-300 text-white">
+                                Learn More →
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden group shine-effect order-1 md:order-2">
+                        <img src="https://images.unsplash.com/photo-1547239375-f42222103b29?q=80&w=1170&auto=format&fit=crop"
+                            alt="Exhibition Crowd Management" loading="lazy"
+                            class="shine-image absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-l from-black/80 to-black/50 
+                            dark:from-black/90 dark:to-black/60"></div>
+                    </div>
+                </section>
+
+                <!-- Example 3 -->
+                <section class="scroll-section relative min-h-screen md:h-screen flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden group shine-effect">
+                        <img src="https://images.unsplash.com/photo-1695510757259-643081efedf0?q=80&w=1332&auto=format&fit=crop"
+                            alt="Crowd Flow at Transport Hub" loading="lazy"
+                            class="shine-image absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 
+                            dark:from-black/90 dark:to-black/60"></div>
+                    </div>
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-10 
+                        bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)]">
+                        <div class="max-w-lg">
+                            <span class="text-[var(--accent-main)] tracking-wider text-sm font-mono">03 /
+                                MOBILITY</span>
+                            <h2
+                                class="mt-4 text-5xl md:text-6xl font-bold leading-none split-reveal text-[var(--text-primary)]">
+                                Transport Hubs
+                            </h2>
+                            <p class="mt-6 text-[var(--text-muted)] text-lg leading-relaxed text-reveal">
+                                Secure and efficient access at airports, metros, and bus stations with digital QR
+                                validation.
+                            </p>
+                            <button class="mt-8 px-6 py-3 bg-gradient-to-br from-[var(--accent-main)] to-black 
+                                   dark:from-black dark:to-[var(--accent-main)] hover:scale-105 rounded-full 
+                                   text-sm font-medium transition-all duration-300 text-white">
+                                Discover More →
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Example 4 -->
+                <section class="scroll-section relative min-h-screen md:h-screen flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-10 
+                        bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] order-2 md:order-1">
+                        <div class="max-w-lg">
+                            <span class="text-[var(--accent-main)] tracking-wider text-sm font-mono">04 /
+                                COMMUNITY</span>
+                            <h2
+                                class="mt-4 text-5xl md:text-6xl font-bold leading-none split-reveal text-[var(--text-primary)]">
+                                Festivals & Gatherings
+                            </h2>
+                            <p class="mt-6 text-[var(--text-muted)] text-lg leading-relaxed text-reveal">
+                                From concerts to cultural fairs — FlowGate ensures safe, seamless crowd experiences.
+                            </p>
+                            <button class="mt-8 px-6 py-3 bg-gradient-to-br from-[var(--accent-main)] to-black 
+                                   dark:from-black dark:to-[var(--accent-main)] hover:scale-105 rounded-full 
+                                   text-sm font-medium transition-all duration-300 text-white">
+                                Join the Experience →
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden group shine-effect order-1 md:order-2">
+                        <img src="https://images.unsplash.com/photo-1722278792384-9b65776e8252?q=80&w=1170&auto=format&fit=crop"
+                            alt="Festival Crowd Flow" loading="lazy"
+                            class="shine-image absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-l from-black/80 to-black/50 
+                            dark:from-black/90 dark:to-black/60"></div>
+                    </div>
+                </section>
+
+                <!-- Navigation Dots -->
+                <div class="fixed right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+                    <button onclick="scrollToSection(0)" aria-label="Go to Stadium Gateways"
+                        class="dot w-3 h-3 rounded-full bg-[var(--text-muted)] dark:bg-white/40 hover:bg-[var(--accent-main)] transition-all duration-300"></button>
+                    <button onclick="scrollToSection(1)" aria-label="Go to Exhibition Halls"
+                        class="dot w-3 h-3 rounded-full bg-[var(--text-muted)] dark:bg-white/40 hover:bg-[var(--accent-main)] transition-all duration-300"></button>
+                    <button onclick="scrollToSection(2)" aria-label="Go to Transport Hubs"
+                        class="dot w-3 h-3 rounded-full bg-[var(--text-muted)] dark:bg-white/40 hover:bg-[var(--accent-main)] transition-all duration-300"></button>
+                    <button onclick="scrollToSection(3)" aria-label="Go to Festivals & Gatherings"
+                        class="dot w-3 h-3 rounded-full bg-[var(--text-muted)] dark:bg-white/40 hover:bg-[var(--accent-main)] transition-all duration-300"></button>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <!-- Contact Section: FlowGate -->
+        <section id="contact"
+            class="text-[var(--text-primary)] body-font relative bg-[var(--bg-base)] transition-colors duration-300">
+            <div class="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
+
+                <!-- Map & Address Block -->
+                <div
+                    class="lg:w-2/3 md:w-1/2 bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative shadow-md">
+
+                    <!-- Embedded Map -->
+                    <iframe width="100%" height="100%" class="absolute inset-0" frameborder="0"
+                        title="Kongu Engineering College Location" marginheight="0" marginwidth="0" scrolling="no"
+                        src="https://maps.google.com/maps?q=Kongu%20Engineering%20College&t=&z=15&ie=UTF8&iwloc=&output=embed">
+                    </iframe>
+
+                    <!-- Address Info -->
+                    <div
+                        class="bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] relative flex flex-wrap py-6 rounded-xl shadow-lg border border-[var(--border-light)]">
+                        <div class="lg:w-1/2 px-6">
+                            <h2 class="title-font font-semibold text-[var(--text-primary)] tracking-widest text-xs">
+                                ADDRESS</h2>
+                            <p class="mt-1 text-[var(--text-muted)]">FlowGate HQ, Kongu Engineering College, Perundurai,
+                                Tamil Nadu - 638060</p>
+                        </div>
+                        <div class="lg:w-1/2 px-6 mt-4 lg:mt-0">
+                            <h2 class="title-font font-semibold text-[var(--text-primary)] tracking-widest text-xs">
+                                EMAIL</h2>
+                            <a class="text-[var(--accent-main)] leading-relaxed hover:underline"
+                                href="mailto:contact@flowgate.ai">contact@flowgate.ai</a>
+                            <h2
+                                class="title-font font-semibold text-[var(--text-primary)] tracking-widest text-xs mt-4">
+                                PHONE</h2>
+                            <p class="leading-relaxed text-[var(--text-muted)]">+91 98765 43210</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div
+                    class="lg:w-1/3 md:w-1/2 bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 rounded-xl shadow-lg p-8 border border-[var(--border-light)]">
+
+                    <h2 class="text-2xl font-bold mb-2 text-[var(--text-primary)]">Get in Touch</h2>
+                    <p class="leading-relaxed mb-5 text-[var(--text-muted)]">We’d love to hear from you. Drop us your
+                        queries or feedback about FlowGate.</p>
+
+                    <!-- Form Element (Required for JS Validation) -->
+                    <form id="contactForm" novalidate>
+
+                        <!-- Name -->
+                        <div class="relative mb-4">
+                            <label for="name" class="leading-7 text-sm text-[var(--text-muted)]">Name</label>
+                            <input type="text" id="name" name="name" class="w-full bg-[var(--input-bg)] text-[var(--input-color)] placeholder-[var(--input-placeholder)] 
+                               rounded border border-[var(--border-light)] focus:border-[var(--accent-main)] 
+                               focus:ring-2 focus:ring-[var(--accent-main)] text-base outline-none py-2 px-3 leading-8 
+                               transition-colors duration-200 ease-in-out">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="relative mb-4">
+                            <label for="email" class="leading-7 text-sm text-[var(--text-muted)]">Email</label>
+                            <input type="email" id="email" name="email" class="w-full bg-[var(--input-bg)] text-[var(--input-color)] placeholder-[var(--input-placeholder)] 
+                               rounded border border-[var(--border-light)] focus:border-[var(--accent-main)] 
+                               focus:ring-2 focus:ring-[var(--accent-main)] text-base outline-none py-2 px-3 leading-8 
+                               transition-colors duration-200 ease-in-out">
+                        </div>
+
+                        <!-- Message -->
+                        <div class="relative mb-4">
+                            <label for="message" class="leading-7 text-sm text-[var(--text-muted)]">Message</label>
+                            <textarea id="message" name="message" class="w-full bg-[var(--input-bg)] text-[var(--input-color)] placeholder-[var(--input-placeholder)] 
+                               rounded border border-[var(--border-light)] focus:border-[var(--accent-main)] 
+                               focus:ring-2 focus:ring-[var(--accent-main)] h-32 resize-none text-base outline-none py-2 px-3 
+                               leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="text-white bg-gradient-to-br from-[var(--accent-main)] to-black border-0 py-2 px-6 
+                           focus:outline-none hover:scale-105 transition-transform duration-300 rounded-full text-lg">
+                            Send Message
+                        </button>
+                    </form>
+
+                    <p class="text-xs text-[var(--text-muted)] mt-3">Our team will get back to you shortly.</p>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+
+    <footer class="relative bg-gradient-to-br from-black to-neutral-900 text-white overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20">
+            <div
+                class="absolute top-20 left-10 w-32 h-32 bg-[var(--accent-main)]/40 rounded-full filter blur-3xl animate-float1">
+            </div>
+            <div
+                class="absolute top-40 right-20 w-40 h-40 bg-purple-500/40 rounded-full filter blur-3xl animate-float2">
+            </div>
+            <div
+                class="absolute bottom-10 left-1/2 w-48 h-48 bg-cyan-500/40 rounded-full filter blur-3xl animate-float3">
+            </div>
+        </div>
+
+        <!-- Main footer content -->
+        <div class="relative max-w-7xl mx-auto px-6 py-16 sm:py-20 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12">
+
+                <!-- Logo / Brand -->
+                <div class="group">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-r from-[var(--accent-main)] to-black rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition duration-500">
+                            <i class="bi bi-robot text-xl text-white"></i>
+                        </div>
+                        <h2
+                            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-main)] to-white">
+                            FlowGate
+                        </h2>
+                    </div>
+                    <p class="text-[var(--text-muted)] mb-6">
+                        AI-IoT powered smart access and crowd control for a sustainable, connected future.
+                    </p>
+
+                    <!-- Social links -->
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-twitter text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-linkedin text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-[var(--accent-main)] hover:shadow-lg transition-all duration-300">
+                            <i class="bi bi-github text-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="home.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-house-door me-2"></i>Home</a></li>
+                        <li><a href="aboutus.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-info-circle me-2"></i>About Us</a></li>
+                        <li><a href="blog.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-journal-text me-2"></i>Blog</a></li>
+                        <li><a href="contact.html"
+                                class="text-[var(--text-muted)] hover:text-white transition flex items-center"><i
+                                    class="bi bi-envelope me-2"></i>Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact info -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Get in Touch</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div
+                                class="w-8 h-8 bg-[var(--accent-main)]/20 rounded-full flex items-center justify-center animate-pulse">
+                                <i class="bi bi-envelope text-[var(--accent-main)]"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-[var(--text-muted)]">Email</p>
+                                <a href="mailto:info@flowgate.com"
+                                    class="text-white hover:text-[var(--accent-main)] transition">info@flowgate.com</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="w-8 h-8 bg-[var(--accent-main)]/20 rounded-full flex items-center justify-center animate-pulse"
+                                style="animation-delay: 0.2s">
+                                <i class="bi bi-telephone text-[var(--accent-main)]"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-[var(--text-muted)]">Phone</p>
+                                <a href="tel:+919876543210"
+                                    class="text-white hover:text-[var(--accent-main)] transition">+91 98765 43210</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Stay Updated</h3>
+                    <p class="text-[var(--text-muted)] mb-4">Subscribe for FlowGate updates, releases & insights.</p>
+                    <form class="mt-4">
+                        <div class="relative">
+                            <input type="email" placeholder="Your email"
+                                class="w-full bg-neutral-800 border border-neutral-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--accent-main)] text-white placeholder-gray-500">
+                            <button type="submit"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[var(--accent-main)] hover:bg-black text-white rounded-lg px-4 py-2 transition">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="mt-16 pt-8 border-t border-neutral-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-[var(--text-muted)] text-sm mb-4 md:mb-0">
+                    &copy; <span id="year" class="text-[var(--accent-main)]"></span> FlowGate. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Terms of Service</a>
+                    <a href="#" class="text-[var(--text-muted)] hover:text-white transition">Cookies</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating orb -->
+        <div
+            class="orb absolute w-64 h-64 rounded-full bg-gradient-to-r from-[var(--accent-main)]/10 to-purple-500/10 filter blur-3xl pointer-events-none">
+        </div>
+    </footer>
+
+    <!-- AOS Script -->
+    <script src=" https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+
+    <!-- SwiperJS (carousel) CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="/Frontend/Js/main.js" defer></script>
+</body>
+
+</html>

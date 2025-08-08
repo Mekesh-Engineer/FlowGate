@@ -1,0 +1,475 @@
+/* ===========================
+   🌐 Base Theme (Shared Vars)
+=========================== */
+:root {
+  /* Typography */
+  --font-primary: "Roboto", sans-serif;
+  --font-secondary: "Poppins", sans-serif;
+
+  --heading-size-lg: 2.5rem;
+  --heading-weight-lg: 800;
+
+  --subheading-size: 1.5rem;
+  --subheading-weight: 600;
+
+  --body-size: 1rem;
+  --body-weight: 400;
+
+  --label-size: 0.875rem;
+  --label-weight: 500;
+
+  --button-font: "Poppins", sans-serif;
+  --button-size: 1rem;
+  --button-weight: 700;
+
+  --text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  /* Common Text Colors */
+  --text-color-light: #ffffff;
+  --text-color-dark: #1a1a1a;
+}
+
+/* ===========================
+   🌑 Dark Mode Variables
+=========================== */
+:root[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-base: #000000;
+  --bg-surface: #1a1a1a;
+  --form-overlay-bg: rgba(0, 0, 0, 0.65);
+  --form-overlay-blur: 20px;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-muted: #999999;
+
+  /* Input Fields */
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --input-color: #ffffff;
+  --input-placeholder: #cccccc;
+
+  /* Accent Colors */
+  --accent-main: #ff1f2c;
+  --accent-alt: #b2f302;
+
+  /* Status */
+  --success: #b2f302;
+  --danger: #ff1f2c;
+
+  /* UI Decorations */
+  --border-light: #333333;
+  --shadow-soft: rgba(0, 0, 0, 0.35);
+  --glow-effect: rgba(255, 31, 44, 0.25);
+}
+
+/* ===========================
+   ☀️ Light Mode Variables
+=========================== */
+:root[data-theme="light"] {
+  /* Backgrounds */
+  --bg-base: #ffffff;
+  --bg-surface: #ffffff;
+  --form-overlay-bg: rgba(255, 255, 255, 0.85);
+  --form-overlay-blur: 16px;
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-muted: #666666;
+
+  /* Input Fields */
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --input-color: #1a1a1a;
+  --input-placeholder: #999999;
+
+  /* Accent Colors */
+  --accent-main: #ff1f2c;
+  --accent-alt: #b2f302;
+
+  /* Status */
+  --success: #4caf50;
+  --danger: #ff1f2c;
+
+  /* UI Decorations */
+  --border-light: #e0e0e0;
+  --shadow-soft: rgba(0, 0, 0, 0.08);
+  --glow-effect: rgba(255, 31, 44, 0.1);
+}
+
+/* ===========================
+   🌐 Global Styles
+=========================== */
+.loader {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  background-image: linear-gradient(var(--accent-main) 16px, transparent 0),
+    linear-gradient(var(--text-primary) 16px, transparent 0),
+    linear-gradient(var(--accent-main) 16px, transparent 0),
+    linear-gradient(var(--text-primary) 16px, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: left top, left bottom, right top, right bottom;
+  animation: rotate 1s linear infinite;
+  border-radius: 4px; /* Optional: smooth corners */
+}
+@keyframes rotate {
+  0% {
+    width: 64px;
+    height: 64px;
+    transform: rotate(0deg);
+  }
+  50% {
+    width: 30px;
+    height: 30px;
+    transform: rotate(180deg);
+  }
+  100% {
+    width: 64px;
+    height: 64px;
+    transform: rotate(360deg);
+  }
+}
+/* Floating robot */
+@keyframes floatBot {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+.animate-floatBot {
+  animation: floatBot 3s ease-in-out infinite;
+}
+
+/* Fade in greeting */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+/* ===========================
+   🌐 Common Styles
+=========================== */
+
+/* Float animation for icon */
+@keyframes floatBot {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-floatBot {
+  animation: floatBot 3s ease-in-out infinite;
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+/* ===============================
+   Sidebar Navigation Styling
+   =============================== */
+
+/* Sidebar */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  background-color: transparent;
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-link i {
+  color: currentColor;
+  transition: color 0.2s ease;
+}
+
+.sidebar-link.active,
+.sidebar-link:hover {
+  background: var(--bg-surface);
+  color: var(--accent-main);
+}
+
+.sidebar-link.active i,
+.sidebar-link:hover i {
+  color: var(--accent-main);
+}
+
+.sidebar-label {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+/* Tooltip */
+.nav-tooltip {
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-surface);
+  color: var(--accent-main);
+  border-radius: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 8px #0001;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.nav-tooltip:not(.hidden) {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.sidebar-collapsed {
+  width: 80px !important;
+}
+
+.sidebar-collapsed .sidebar-label {
+  display: none !important;
+}
+
+.sidebar-collapsed .sidebar-link {
+  justify-content: center;
+}
+
+.sidebar-collapsed .nav-tooltip {
+  display: block;
+}
+
+.sidebar-collapsed .sidebar-link:hover .nav-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Scrollbar */
+#alertPanel {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+/* ===============================
+   Form Overlay Styling
+   =============================== */
+
+@layer utilities {
+  .shadow-glow {
+    box-shadow: 0 0 10px var(--glow-effect);
+  }
+  .animate-fade-in-bottom {
+    animation: fadeInBottom 1s ease-out both;
+  }
+  @keyframes fadeInBottom {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ===============================
+   Form Overlay Styling
+   =============================== */
+scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* ===============================
+   Animation Keyframes
+   =============================== */
+@keyframes reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes textReveal {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  to {
+    transform: translateX(200%) rotate(45deg);
+  }
+}
+
+.shine-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%) rotate(45deg);
+  pointer-events: none;
+}
+
+/* Fix shine image load issue */
+.shine-image {
+  opacity: 1; /* Ensure visible immediately */
+  transition: transform 1s ease-in-out; /* Smooth zoom only */
+}
+
+.shine-effect:hover .shine-image {
+  transform: scale(1.05); /* Subtle zoom on hover */
+}
+
+/* Adjust heading split reveal */
+.split-reveal {
+  animation: reveal 0.8s ease forwards;
+  color: var(--text-primary); /* Always visible text */
+}
+
+/* Optional: Keep a slight fade-in for images */
+.shine-image {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out, transform 1s ease-in-out;
+}
+
+.scroll-container {
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@keyframes float1 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, 20px);
+  }
+}
+@keyframes float2 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-15px, 15px);
+  }
+}
+@keyframes float3 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, -20px);
+  }
+}
+.animate-float1 {
+  animation: float1 8s ease-in-out infinite;
+}
+.animate-float2 {
+  animation: float2 10s ease-in-out infinite;
+}
+.animate-float3 {
+  animation: float3 12s ease-in-out infinite;
+}
+.orb {
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  transition: transform 0.1s ease-out;
+}
+
+/* ticket booking page  */
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce {
+    animation: none !important;
+  }
+  .animate-gradient-motion {
+    animation: none !important;
+  }
+}
+
+/* Gradient animation keyframe */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-motion {
+  background-size: 400% 400%;
+  animation: gradientMove 20s ease infinite;
+}
